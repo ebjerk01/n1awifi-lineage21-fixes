@@ -1,0 +1,7 @@
+ir-hal/.tools/
+ir-hal/gen/
+ir-hal/plat/
+ir-hal/lib/
+ir-hal/out/
+sepolicy/src/
+sepolicy/out/
