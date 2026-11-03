@@ -77,7 +77,7 @@ The Exynos 5420 (big.LITTLE with in-kernel switching, 4 logical CPUs, 3 GB RAM) 
 
 | Change | How |
 |---|---|
-| Compile every app to native code. Out of the box about 120 apps ran uncompiled (`verify`/`error`/`unknown`), including parts of the system UI. | `adb shell su -c "cmd package compile -m speed -f -a"` (one-off, about 20 min, uses about 1 GB on /data; a few system apps report Failure, which is harmless) |
+| Compile every app to native code. Out of the box about 120 apps ran uncompiled (`verify`/`error`/`unknown`), including parts of the system UI. | `adb shell su -c "cmd package compile -m speed -f -a"` (one-off, about 12 min, uses about 1 GB on /data; a few system apps report Failure, which is harmless) |
 | CPU governor `interactive` instead of `ondemand`: ramps on touch, hispeed 1.3 GHz at 85 % load, 20 ms timer | `tuning/99-n1awifi-tune.sh` in `/data/adb/service.d/` (Magisk, runs every boot) |
 | eMMC I/O scheduler `deadline`, read-ahead 512 KB | same script |
 | Animations at 0.5× | `adb shell settings put global {window,transition}_animation_scale 0.5; adb shell settings put global animator_duration_scale 0.5` |
