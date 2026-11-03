@@ -13,6 +13,10 @@ I=/sys/devices/system/cpu/cpufreq/interactive
   echo 80000   > $I/boostpulse_duration 2>/dev/null
   echo 1       > $I/io_is_busy 2>/dev/null
 }
+# Mali-T628: the default DVFS governor almost never leaves 100-177 MHz (utilisation is under-reported),
+# so frames take ~70 ms. A 480 MHz floor halves frame times. Costs battery; '0' removes the floor.
+M=/sys/devices/platform/mali.0
+[ -d $M ] && echo 480 > $M/dvfs_min_lock
 for q in /sys/block/mmcblk0/queue /sys/block/mmcblk1/queue; do
   [ -d $q ] && { echo deadline > $q/scheduler; echo 512 > $q/read_ahead_kb; }
 done

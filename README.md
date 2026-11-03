@@ -81,9 +81,20 @@ The Exynos 5420 (big.LITTLE with in-kernel switching, 4 logical CPUs, 3 GB RAM) 
 | CPU governor `interactive` instead of `ondemand`: ramps on touch, hispeed 1.3 GHz at 85 % load, 20 ms timer | `tuning/99-n1awifi-tune.sh` in `/data/adb/service.d/` (Magisk, runs every boot) |
 | eMMC I/O scheduler `deadline`, read-ahead 512 KB | same script |
 | Animations at 0.5× | `adb shell settings put global {window,transition}_animation_scale 0.5; adb shell settings put global animator_duration_scale 0.5` |
+| **GPU floor 480 MHz.** The Mali-T628's default DVFS governor almost never leaves 100–177 MHz, because utilisation is under-reported. Its `Interactive` and `Booster` governors don't help either. | `echo 480 > /sys/devices/platform/mali.0/dvfs_min_lock` (in the tuning script; `echo 0` removes it). Costs battery and some heat. |
+| Render at 1920×1200, density 240 (same layout, slightly softer text) | `adb shell wm size 1920x1200; adb shell wm density 240` (persists; undo with `wm size reset; wm density reset`) |
 
-Optional, not applied by default: render at a lower resolution to ease the load on the Mali-T628 GPU. This makes text slightly softer.
-Turn it on with `adb shell wm size 1920x1200`, and undo it with `adb shell wm size reset`.
+### Measured
+Same test each time: 12 swipes opening/closing the app drawer, frames from `dumpsys gfxinfo com.android.launcher3`. More frames in the same
+time means smoother.
+
+| Setting | Frames | Median frame | 90th percentile |
+|---|---|---|---|
+| Stock (after app compilation and CPU governor) | 285 | 69 ms | 150 ms |
+| 1920×1200 only | 304 | 57 ms | 101 ms |
+| GPU floor 480 MHz only | 410 | 34 ms | 53 ms |
+| GPU floor 600 MHz only | 425 | 32 ms | 46 ms |
+| **GPU floor 480 MHz + 1920×1200 @ 240 dpi** | **441** | **27 ms** | **40 ms** |
 
 ## License
 Apache-2.0. The AIDL files in `ir-hal/aidl` are from AOSP (Apache-2.0). `prebuilt/precompiled_sepolicy` is LineageOS's
